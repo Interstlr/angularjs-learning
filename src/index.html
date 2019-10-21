@@ -5,26 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <!-- <link rel="preload" href="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js" as="script"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
     <script src="app.module.js"></script>
+    <script src="phone-contact.service.js"></script>
+    <script src="models/PhoneContact.js"></script>
+    <script src="libs/uuidv4.js"></script>
     <link rel="stylesheet" href="styles/global.css">
   </head>
   <body ng-app="AppModule" ng-controller="AppController">
+    <div class="filter-input">
+      <input type="text" ng-model="nameFilter" placeholder="Type name to filter">
+    </div>
+    <div class="new-contact-form">
+      <label> Full Name:
+        <input type="text" ng-model="newContactFormData.fullName">
+      </label>
+      <label> Phone Number:
+        <input type="text" ng-model="newContactFormData.phoneNumber">
+      </label>
+      <label> Email:
+        <input type="text" ng-model="newContactFormData.email">
+      </label>
+      <label> Address:
+        <input type="text" ng-model="newContactFormData.address">
+      </label>
+      <button type="submit" ng-click="addContact(newContactFormData)">Add Contact</button>
+    </div>
     <div
-      ng-repeat="record in addressBook track by record.id"
-      ng-class="{'red-bg': record.firstName.charAt(0) === 'A', 'blue-bg': record.firstName.charAt(0) === 'D'}"
+      ng-repeat="record in contacts | filter:nameFilter | orderBy: 'fullName' track by record.id"
+      ng-class="{'red-bg': record.fullName.charAt(0) === 'A', 'blue-bg': record.fullName.charAt(0) === 'D'}"
       class="record"
     >
       <div class="controls">
         <label> Show phone number:
           <input type="checkbox" ng-model="record.phoneNumber.visible">
         </label>
+        <button ng-click="deleteContact(record.id)">Delete Contact</button>
       </div>
       <div class="divider"></div>
       <div class="record-data">
-        <span class="row">First Name: {{record.firstName}}</span>
-        <span class="row">Last Name: {{record.lastName}}</span>
+        <span class="row">Full Name: {{record.fullName}}</span>
         <span ng-if="record.phoneNumber.visible" class="row">Phone Number: {{record.phoneNumber.value}}</span>
         <span class="row">Email: {{record.email}}</span>
         <span class="row">Address: {{record.address}}</span>

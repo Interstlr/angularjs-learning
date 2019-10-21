@@ -1,43 +1,28 @@
 const appModule = angular.module('AppModule', []);
 
-const appController = function($scope) {
-  const addressBook = [
-    {
-      id: '1',
-      firstName: 'Alex',
-      lastName: 'Frost',
-      phoneNumber: {
-        value: '33342245555',
-        visible: true,
-      },
-      email: 'alex@gmail.com',
-      address: 'Minsk',
-    },
-    {
-      id: '2',
-      firstName: 'Anna',
-      lastName: 'Test',
-      phoneNumber: {
-        value: '233446435',
-        visible: true,
-      },
-      email: 'annaa@gmail.com',
-      address: 'LA',
-    },
-    {
-      id: '3',
-      firstName: 'Daniel',
-      lastName: 'Smith',
-      phoneNumber: {
-        value: '2342345',
-        visible: true,
-      },
-      email: 'daniel@gmail.com',
-      address: 'NY',
-    },
-  ];
+const appController = function($scope, phoneContactService) {
+  $scope.contacts = phoneContactService.getAll();
+  $scope.nameFilter = '';
+  $scope.newContactFormData = {};
 
-  $scope.addressBook = addressBook;
+  $scope.addContact = function(data) {
+    const notRequiredFields = ['id'];
+    const fieldsToCheck = Object
+      .keys(PhoneContact)
+      .filter(field => !notRequiredFields.includes(field));
+
+    if (fieldsToCheck.length !== Object.keys(data).length) {
+      return;
+    }
+
+    phoneContactService.addContact(data);
+
+    $scope.newContactFormData = {};
+  }
+
+  $scope.deleteContact = function(id) {
+    phoneContactService.deleteContact(id);
+  }
 }
 
-appModule.controller("AppController", ['$scope', appController]);
+appModule.controller("AppController", ['$scope', 'phoneContactService', appController]);
