@@ -1,6 +1,15 @@
-const appModule = angular.module('AppModule', []);
+// import appTemplate from './app.template.html';
 
-const appController = function($scope, phoneContactService) {
+export default function appComponent() {
+  return {
+    controller: AppComponentController,
+    template: import('./app.template.html'),
+  };
+}
+
+function AppComponentController($scope, phoneContactService) {
+  $scope.hello = 'Hello Component';
+  return;
   $scope.contacts = phoneContactService.getAll();
   $scope.nameFilter = '';
   $scope.newContactFormData = {};
@@ -24,5 +33,3 @@ const appController = function($scope, phoneContactService) {
     phoneContactService.deleteContact(id);
   }
 }
-
-appModule.controller("AppController", ['$scope', 'phoneContactService', appController]);
